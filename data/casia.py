@@ -9,7 +9,8 @@ args = parser.parse_args()
 class_list = os.listdir(args.train_data_dir)
 for c in class_list:
     class_dir = os.path.join(args.train_data_dir, c)
-    img_list = os.listdir(class_dir)
-    for img in img_list:
-        img_path = os.path.join(class_dir, img)
-        print (img_path)
+    if os.path.isdir(class_dir):
+        img_list = os.listdir(class_dir)
+        for img in img_list:
+            img_path = os.path.join(class_dir, img)
+            print (img_path)
