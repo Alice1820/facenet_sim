@@ -36,7 +36,7 @@ def evaluate(embeddings, actual_issame, nrof_folds=10):
     thresholds = np.arange(0, 4, 0.01)
     embeddings1 = embeddings[0::2]
     embeddings2 = embeddings[1::2]
-    print (embeddings, 'embeddings')
+    # print (embeddings, 'embeddings')
     tpr, fpr, accuracy = facenet.calculate_roc(thresholds, embeddings1, embeddings2,
         np.asarray(actual_issame), nrof_folds=nrof_folds)
     thresholds = np.arange(0, 4, 0.001)
@@ -57,8 +57,8 @@ def get_paths(lfw_dir, pairs, file_ext):
             path0 = os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])+'_0.'+file_ext)
             path1 = os.path.join(lfw_dir, pair[2], pair[2] + '_' + '%04d' % int(pair[3])+'_0.'+file_ext)
             issame = False
-        print (path0)
-        print (path1)
+        # print (path0)
+        # print (path1)
         if os.path.exists(path0) and os.path.exists(path1):    # Only add the pair if both paths exist
             path_list += (path0,path1)
             issame_list.append(issame)
@@ -67,8 +67,8 @@ def get_paths(lfw_dir, pairs, file_ext):
     if nrof_skipped_pairs>0:
         print('Skipped %d image pairs' % nrof_skipped_pairs)
 
-    print (path_list, 'path_list')
-    print (issame_list, 'issame_list')
+    # print (path_list, 'path_list')
+    # print (issame_list, 'issame_list')
     return path_list, issame_list
 
 def read_pairs(pairs_filename):

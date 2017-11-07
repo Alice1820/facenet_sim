@@ -455,6 +455,7 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame, nrof_fold
     #     _, _, accuracy[fold_idx] = calculate_accuracy(thresholds[best_threshold_index], dist[test_set], actual_issame[test_set])
     # print (dist)
     # print (actual_issame)
+    acc_train = np.zeros((nrof_thresholds))
     for threshold_idx, threshold in enumerate(thresholds):
         _, _, acc_train[threshold_idx] = calculate_accuracy(threshold, dist, actual_issame)
         tprs[fold_idx,threshold_idx], fprs[fold_idx,threshold_idx], _ = calculate_accuracy(threshold, dist, actual_issame)
@@ -506,6 +507,7 @@ def calculate_val(thresholds, embeddings1, embeddings2, actual_issame, far_targe
     #
     #     val[fold_idx], far[fold_idx] = calculate_val_far(threshold, dist[test_set], actual_issame[test_set])
 
+    far_train = np.zeros(nrof_thresholds)
     for threshold_idx, threshold in enumerate(thresholds):
         _, far_train[threshold_idx] = calculate_val_far(threshold, dist, actual_issame)
     if np.max(far_train)>=far_target:
