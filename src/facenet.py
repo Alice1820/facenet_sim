@@ -33,7 +33,7 @@ import tensorflow as tf
 from tensorflow.python.framework import ops
 import numpy as np
 from scipy import misc
-from sklearn.model_selection import KFold
+# from sklearn.model_selection import KFold
 from scipy import interpolate
 from tensorflow.python.training import training
 import random
@@ -433,7 +433,7 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame, nrof_fold
     assert(embeddings1.shape[1] == embeddings2.shape[1])
     nrof_pairs = min(len(actual_issame), embeddings1.shape[0])
     nrof_thresholds = len(thresholds)
-    k_fold = KFold(n_splits=nrof_folds, shuffle=False)
+    # k_fold = KFold(n_splits=nrof_folds, shuffle=False)
 
     tprs = np.zeros((nrof_folds,nrof_thresholds))
     fprs = np.zeros((nrof_folds,nrof_thresholds))
@@ -443,17 +443,22 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame, nrof_fold
     dist = np.sum(np.square(diff),1)
     indices = np.arange(nrof_pairs)
 
-    for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
+    # for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
+    #
+    #     # Find the best threshold for the fold
+    #     acc_train = np.zeros((nrof_thresholds))
+    #     for threshold_idx, threshold in enumerate(thresholds):
+    #         _, _, acc_train[threshold_idx] = calculate_accuracy(threshold, dist[train_set], actual_issame[train_set])
+    #     best_threshold_index = np.argmax(acc_train)
+    #     for threshold_idx, threshold in enumerate(thresholds):
+    #         tprs[fold_idx,threshold_idx], fprs[fold_idx,threshold_idx], _ = calculate_accuracy(threshold, dist[test_set], actual_issame[test_set])
+    #     _, _, accuracy[fold_idx] = calculate_accuracy(thresholds[best_threshold_index], dist[test_set], actual_issame[test_set])
 
-        # Find the best threshold for the fold
-        acc_train = np.zeros((nrof_thresholds))
-        for threshold_idx, threshold in enumerate(thresholds):
-            _, _, acc_train[threshold_idx] = calculate_accuracy(threshold, dist[train_set], actual_issame[train_set])
-        best_threshold_index = np.argmax(acc_train)
-        for threshold_idx, threshold in enumerate(thresholds):
-            tprs[fold_idx,threshold_idx], fprs[fold_idx,threshold_idx], _ = calculate_accuracy(threshold, dist[test_set], actual_issame[test_set])
-        _, _, accuracy[fold_idx] = calculate_accuracy(thresholds[best_threshold_index], dist[test_set], actual_issame[test_set])
-
+    for threshold_idx, threshold in enumerate(thresholds):
+        _, _, acc_train[threshold_idx] = calculate_accuracy(threshold, dist, actual_issame)
+        tprs[fold_idx,threshold_idx], fprs[fold_idx,threshold_idx], _ = calculate_accuracy(threshold, dist, actual_issame)
+    best_threshold_index = np.argmax(acc_train)
+    _, _, accuracy[fold_idx] = calculate_accuracy(thresholds[best_threshold_index], dist, actual_issame)
     tpr = np.mean(tprs,0)
     fpr = np.mean(fprs,0)
     return tpr, fpr, accuracy
@@ -477,7 +482,7 @@ def calculate_val(thresholds, embeddings1, embeddings2, actual_issame, far_targe
     assert(embeddings1.shape[1] == embeddings2.shape[1])
     nrof_pairs = min(len(actual_issame), embeddings1.shape[0])
     nrof_thresholds = len(thresholds)
-    k_fold = KFold(n_splits=nrof_folds, shuffle=False)
+    # k_fold = KFold(n_splits=nrof_folds, shuffle=False)
 
     val = np.zeros(nrof_folds)
     far = np.zeros(nrof_folds)
@@ -486,22 +491,31 @@ def calculate_val(thresholds, embeddings1, embeddings2, actual_issame, far_targe
     dist = np.sum(np.square(diff),1)
     indices = np.arange(nrof_pairs)
 
-    for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
+    # for fold_idx, (train_set, test_set) in enumerate(k_fold.split(indices)):
+    #
+    #     # Find the threshold that gives FAR = far_target
+    #     far_train = np.zeros(nrof_thresholds)
+    #     for threshold_idx, threshold in enumerate(thresholds):
+    #         _, far_train[threshold_idx] = calculate_val_far(threshold, dist[train_set], actual_issame[train_set])
+    #     if np.max(far_train)>=far_target:
+    #         f = interpolate.interp1d(far_train, thresholds, kind='slinear')
+    #         threshold = f(far_target)
+    #     else:
+    #         threshold = 0.0
+    #
+    #     val[fold_idx], far[fold_idx] = calculate_val_far(threshold, dist[test_set], actual_issame[test_set])
 
-        # Find the threshold that gives FAR = far_target
-        far_train = np.zeros(nrof_thresholds)
-        for threshold_idx, threshold in enumerate(thresholds):
-            _, far_train[threshold_idx] = calculate_val_far(threshold, dist[train_set], actual_issame[train_set])
-        if np.max(far_train)>=far_target:
-            f = interpolate.interp1d(far_train, thresholds, kind='slinear')
-            threshold = f(far_target)
-        else:
-            threshold = 0.0
+    for threshold_idx, threshold in enumerate(thresholds):
+        _, far_train[threshold_idx] = calculate_val_far(threshold, dist, actual_issame)
+     if np.max(far_train)>=far_target:
+        f = interpolate.interp1d(far_train, thresholds, kind='slinear')
+        threshold = f(far_target)
+    else:
+        threshold = 0.0
 
-        val[fold_idx], far[fold_idx] = calculate_val_far(threshold, dist[test_set], actual_issame[test_set])
-
-    val_mean = np.mean(val)
-    far_mean = np.mean(far)
+    val_mean, far_mean = calculate_val_far(threshold, dist, actual_issame)
+    # val_mean = np.mean(val)
+    # far_mean = np.mean(far)
     val_std = np.std(val)
     return val_mean, val_std, far_mean
 
