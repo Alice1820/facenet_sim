@@ -65,6 +65,8 @@ def get_paths(lfw_dir, pairs, file_ext):
     if nrof_skipped_pairs>0:
         print('Skipped %d image pairs' % nrof_skipped_pairs)
 
+    print (path_list, 'path_list')
+    print (issame_list, 'issame_list')
     return path_list, issame_list
 
 def read_pairs(pairs_filename):
