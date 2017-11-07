@@ -435,8 +435,8 @@ def calculate_roc(thresholds, embeddings1, embeddings2, actual_issame, nrof_fold
     nrof_thresholds = len(thresholds)
     # k_fold = KFold(n_splits=nrof_folds, shuffle=False)
 
-    tprs = np.zeros((nrof_folds,nrof_thresholds))
-    fprs = np.zeros((nrof_folds,nrof_thresholds))
+    tprs = np.zeros((nrof_thresholds))
+    fprs = np.zeros((nrof_thresholds))
     # accuracy = np.zeros((nrof_folds))
 
     diff = np.subtract(embeddings1, embeddings2)
