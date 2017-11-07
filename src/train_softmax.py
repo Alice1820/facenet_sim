@@ -328,8 +328,8 @@ def evaluate(sess, enqueue_op, image_paths_placeholder, labels_placeholder, phas
         emb, lab = sess.run([embeddings, labels], feed_dict=feed_dict)
         lab_array[lab] = lab
         emb_array[lab] = emb
-    print (emb_array, 'emb_array')
-    print (actual_issame, 'actual_issame')
+    # print (emb_array, 'emb_array')
+    # print (actual_issame, 'actual_issame')
     assert np.array_equal(lab_array, np.arange(nrof_images))==True, 'Wrong labels used for evaluation, possibly caused by training examples left in the input pipeline'
     _, _, accuracy, val, val_std, far = lfw.evaluate(emb_array, actual_issame, nrof_folds=nrof_folds)
 
