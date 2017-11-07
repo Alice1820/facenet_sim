@@ -211,12 +211,15 @@ def main(args):
             print('Running training')
             epoch = 0
             while epoch < args.max_nrof_epochs:
+
+                step = sess.run(global_step, feed_dict=None)
+                epoch = step // args.epoch_size
+                
+                # Evaluate on LFW
                 if args.lfw_dir:
                     evaluate(sess, enqueue_op, image_paths_placeholder, labels_placeholder, phase_train_placeholder, batch_size_placeholder,
                         embeddings, label_batch, lfw_paths, actual_issame, args.lfw_batch_size, args.lfw_nrof_folds, log_dir, step, summary_writer)
 
-                step = sess.run(global_step, feed_dict=None)
-                epoch = step // args.epoch_size
                 # Train for one epoch
                 train(args, sess, epoch, image_list, label_list, index_dequeue_op, enqueue_op, image_paths_placeholder, labels_placeholder,
                     learning_rate_placeholder, phase_train_placeholder, batch_size_placeholder, global_step,
