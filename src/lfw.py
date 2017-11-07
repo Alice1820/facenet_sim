@@ -1,20 +1,20 @@
-"""Helper for evaluation on the Labeled Faces in the Wild dataset 
+"""Helper for evaluation on the Labeled Faces in the Wild dataset
 """
 
 # MIT License
-# 
+#
 # Copyright (c) 2016 David Sandberg
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,6 +36,7 @@ def evaluate(embeddings, actual_issame, nrof_folds=10):
     thresholds = np.arange(0, 4, 0.01)
     embeddings1 = embeddings[0::2]
     embeddings2 = embeddings[1::2]
+    print (embeddings, 'embeddings')
     tpr, fpr, accuracy = facenet.calculate_roc(thresholds, embeddings1, embeddings2,
         np.asarray(actual_issame), nrof_folds=nrof_folds)
     thresholds = np.arange(0, 4, 0.001)
@@ -63,7 +64,7 @@ def get_paths(lfw_dir, pairs, file_ext):
             nrof_skipped_pairs += 1
     if nrof_skipped_pairs>0:
         print('Skipped %d image pairs' % nrof_skipped_pairs)
-    
+
     return path_list, issame_list
 
 def read_pairs(pairs_filename):
@@ -73,6 +74,3 @@ def read_pairs(pairs_filename):
             pair = line.strip().split()
             pairs.append(pair)
     return np.array(pairs)
-
-
-
