@@ -57,6 +57,8 @@ def get_paths(lfw_dir, pairs, file_ext):
             path0 = os.path.join(lfw_dir, pair[0], pair[0] + '_' + '%04d' % int(pair[1])+'.'+file_ext)
             path1 = os.path.join(lfw_dir, pair[2], pair[2] + '_' + '%04d' % int(pair[3])+'.'+file_ext)
             issame = False
+        print (path_0)
+        print (path_1)
         if os.path.exists(path0) and os.path.exists(path1):    # Only add the pair if both paths exist
             path_list += (path0,path1)
             issame_list.append(issame)
@@ -74,6 +76,6 @@ def read_pairs(pairs_filename):
     with open(pairs_filename, 'r') as f:
         for line in f.readlines()[1:]:
             pair = line.strip().split()
-            print (pair)
+            # print (pair) # e.g. ['Sandra_Banning', '1', 'Wolfgang_Schneiderhan', '1']
             pairs.append(pair)
     return np.array(pairs)
